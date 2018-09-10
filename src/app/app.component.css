@@ -1,0 +1,13 @@
+
+mat-form-field {
+  width: 100%;
+}
+
+mat-form-field .mat-options {
+  font-size: 15px;
+}
+
+.mat-toolbar-row{
+  height: 100px;
+}
+

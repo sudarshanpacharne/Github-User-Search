@@ -1,0 +1,39 @@
+<div fxLayout="row wrap" fxLayoutAlign="center center">
+  <div fxFlex fxFlex="41%">
+     <div class="user-total-count">
+        <h5>Total Count : {{users && users.total_count}}</h5>
+     </div>
+     <mat-card class="user-card" *ngFor="let user of users.items;let idx = index">
+        <mat-card-header>
+           <div fxFlex="25%" class="user-header-image">
+              <img mat-card-avatar src="{{user.avatar_url}}" alt="Photo of a Shiba Inu">
+           </div>
+           <div fxFlex="70%" class="user-header-details">
+              <mat-card-title>{{user.login | titlecase }}</mat-card-title>
+              <mat-card-subtitle>Profile URL : {{user.html_url | slice:0:40 }}</mat-card-subtitle>
+              <mat-card-subtitle>Organaization URL : {{ user.organizations_url | slice:0:40 }}</mat-card-subtitle>
+              <mat-card-subtitle>Rank : {{user.score}}</mat-card-subtitle>
+           </div>
+        </mat-card-header>
+        <mat-card-actions>
+           <button mat-raised-button color="primary" (click)="user.expanded = user.expanded ? false : true;getUserRepos(user, idx)">{{user.expanded ? 'Collapse' : 'Details'}}</button>
+        </mat-card-actions>
+        <mat-divider *ngIf="user.expanded"></mat-divider>
+        <mat-expansion-panel  class="(user.expanded ? 'open-expansion-panel': '')" hideToggle [expanded]="user.expanded">
+           <mat-panel-description>
+              <div fxFlex="100%" fxFlexOffset="25">
+                 <div class="user-repositories" *ngFor="let repositiory of user.repositories">
+                    <div fxFlex="100%">
+                       <mat-card-subtitle>
+                         <strong>Repository Name : {{repositiory.name | titlecase }}</strong>
+                        </mat-card-subtitle>
+                       <mat-card-subtitle>Language : {{repositiory.language | titlecase }}</mat-card-subtitle>
+                       <mat-card-subtitle>Open Issues : {{repositiory.open_issues }} &nbsp; Forks : {{repositiory.forks }} &nbsp; Watchers : {{repositiory.watchers_count }} &nbsp; Stargazers : {{repositiory.stargazers_count }}</mat-card-subtitle>
+                    </div>
+                 </div>
+              </div>
+           </mat-panel-description>
+        </mat-expansion-panel>
+     </mat-card>
+  </div>
+</div>
