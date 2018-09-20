@@ -1,12 +1,7 @@
-<div fxLayout="row wrap" fxLayoutAlign="center center">
-  <div fxFlex fxFlex="41%">
-     <div class="user-total-count">
-        <h5>Total Count : {{users && users.total_count}}</h5>
-     </div>
-     <mat-card class="user-card" *ngFor="let user of users.items;let idx = index">
+     <mat-card class="user-card" >
         <mat-card-header>
            <div fxFlex="25%" class="user-header-image">
-              <img mat-card-avatar src="{{user.avatar_url}}" alt="Photo of a Shiba Inu">
+              <img mat-card-avatar src="{{user.avatar_url}}">
            </div>
            <div fxFlex="70%" class="user-header-details">
               <mat-card-title>{{user.login | titlecase }}</mat-card-title>
@@ -16,13 +11,13 @@
            </div>
         </mat-card-header>
         <mat-card-actions>
-           <button mat-raised-button color="primary" (click)="user.expanded = user.expanded ? false : true;getUserRepos(user, idx)">{{user.expanded ? 'Collapse' : 'Details'}}</button>
+           <button mat-raised-button color="primary" (click)="user.expanded = user.expanded ? false : true;getUserRepos(user)">{{user.expanded ? 'Collapse' : 'Details'}}</button>
         </mat-card-actions>
         <mat-divider *ngIf="user.expanded"></mat-divider>
         <mat-expansion-panel  class="(user.expanded ? 'open-expansion-panel': '')" hideToggle [expanded]="user.expanded">
            <mat-panel-description>
               <div fxFlex="100%" fxFlexOffset="25">
-                 <div class="user-repositories" *ngFor="let repositiory of user.repositories">
+                 <div class="user-repositories" *ngFor="let repositiory of repositories">
                     <div fxFlex="100%">
                        <mat-card-subtitle>
                          <strong>Repository Name : {{repositiory.name | titlecase }}</strong>
@@ -35,5 +30,3 @@
            </mat-panel-description>
         </mat-expansion-panel>
      </mat-card>
-  </div>
-</div>

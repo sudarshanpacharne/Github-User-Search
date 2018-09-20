@@ -21,7 +21,14 @@
   </mat-toolbar-row>
 </mat-toolbar>
 
-<app-profile *ngIf="users && users.items && users.items.length" [usersObj]="users"></app-profile>
+<div fxLayout="row wrap" fxLayoutAlign="center center">
+  <div fxFlex fxFlex="41%">
+    <div class="user-total-count" *ngIf="users && users.total_count">
+      <h5>Total Count : {{users && users.total_count ? users.total_count : 0 }}</h5>
+    </div>
+    <app-profile *ngFor="let user of users.items" [user]="user"></app-profile>
+  </div>
+</div>
 
 <div *ngIf="users && users.items && users.items.length" fxLayout="row" fxLayoutAlign="center center" fxLayoutGap="10px">
   <mat-paginator [length]="length" [pageSize]="pageSize" [pageSizeOptions]="pageSizeOptions" (page)="setPagination($event)">

@@ -1,6 +1,7 @@
-import { PagerService } from './service/pager/pager.service';
+import { PagerService, Pager } from './service/pager/pager.service';
 import { Component } from '@angular/core';
 import { GithubService } from './service/github/github.service';
+import { OnInit } from '@angular/core/src/metadata/lifecycle_hooks';
 
 export interface SortBy {
   value: string;
@@ -8,20 +9,28 @@ export interface SortBy {
   viewValue: string;
 }
 
+export interface Users {  
+  items?: User[];
+  total_count?: number;
+}
+
+export interface User {  
+}
+
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css']
 })
-export class AppComponent {
+export class AppComponent implements OnInit {
   username: string;
-  users: object = { items: [], total_count: 0 };
-  pager: any = {};
-  pagedItems: any[];
+  users: Users;
+  pager: Pager;
   length = 100;
   pageSize = 2;
   pageSizeOptions: number[] = [2, 4, 6, 8];
-  allData: Object;
+  allData: Users;
+
   paginationObj: object = { pageIndex: 1, pageSize: 2 };
   selectedSortByValue: any;
 
@@ -35,7 +44,7 @@ export class AppComponent {
   constructor(private githubService: GithubService, private pagerService: PagerService) {}
 
   sortData() {
-    this.allData['items'] = this.orderByProp(this.allData['items'], this.selectedSortByValue.value, this.selectedSortByValue.order);
+    this.allData.items = this.orderByProp(this.allData.items, this.selectedSortByValue.value, this.selectedSortByValue.order);
     this.setPagination(this.paginationObj);
   }
 
@@ -51,7 +60,7 @@ export class AppComponent {
 
   changeSortByValue(event) {
     if (!this.username || this.username === '') {
-      this.allData = [];
+      this.allData = {};
       this.users = {};
       return;
     }
@@ -60,16 +69,14 @@ export class AppComponent {
 
   searchUser() {
     if (!this.username || this.username === '') {
-      this.allData = [];
+      this.allData = {};
       this.users = {};
       return;
     }
 
-    this.githubService.updateUser(this.username);
-
-    this.githubService.getUser().subscribe(users => {
+    this.githubService.getUser(this.username).subscribe(users => {
       this.allData = users;
-      this.length = users['items'].length;
+      this.length = users.items.length;
       if (this.selectedSortByValue) {
         this.sortData();
       } else {
@@ -79,12 +86,11 @@ export class AppComponent {
   }
 
   setPagination(event) {
-    this.pager = this.pagerService.getPager(this.allData['items'].length, event.pageIndex, event.pageSize);
-    this.users['items'] = this.allData['items'].slice(this.pager.startIndex, this.pager.endIndex + 1);
-    this.users['total_count'] = this.allData['total_count'];
+    this.pager = this.pagerService.getPager(this.allData.items.length, event.pageIndex, event.pageSize);
+    this.users.items = this.allData.items.slice(this.pager.startIndex, this.pager.endIndex + 1);
+    this.users.total_count = this.allData.total_count;
   }
 
-  // tslint:disable-next-line:use-life-cycle-interface
   ngOnInit() {
     this.searchUser();
   }
